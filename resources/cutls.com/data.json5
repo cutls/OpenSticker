@@ -6,5 +6,6 @@
         '#fff'
     ],
     fontColor: '#000',
+    //must https://
     favicon: null
 }

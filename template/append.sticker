@@ -1,0 +1,5 @@
+/*
+OpenSticker {{updated}} under MIT LICENSE
+(c)2020 weep, kyori19, cutls
+*/
+:root{--md:linear-gradient(90deg,#26a 84%,transparent);--mdt:linear-gradient(90deg,#26a 84%,transparent);--c:#fff}.status .display-name:after{display:block!important;padding-left:1pc!important}.notification__display-name:after,.status .display-name:after,.status__display-name.muted:after{font-size:9pt!important;height:1pc!important;white-space:pre!important;text-overflow:ellipsis!important;font-weight:bolder!important;background-repeat:no-repeat,no-repeat!important}.notification__display-name:after,.status__display-name.muted:after{display:inline!important;padding:0 1pc!important;margin:0!important;opacity:.4!important}

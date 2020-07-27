@@ -1,7 +1,6 @@
 import JSON5 from 'https://cdn.jsdelivr.net/gh/cutls/json5-deno@0.0.1/lib/index.ts'
 import { ISticker } from './interfaces/json5.ts'
 import { walkSync, existsSync, writeJsonSync, ensureDirSync } from 'https://deno.land/std/fs/mod.ts'
-import { download, Destination } from 'https://deno.land/x/download/mod.ts'
 const decoder = new TextDecoder('utf-8')
 /*
 チェック
@@ -15,21 +14,30 @@ for (const entry of walkSync('./resources')) {
 	if (domain.match(/[/\\]|\s/)) continue
 	const read = decoder.decode(await Deno.readFile(`./resources/${domain}/data.json5`))
 	let obj = JSON5.parse(read) as ISticker
-	if (!obj.favicon && !existsSync(`./resources/${domain}/favicon.webp`)) {
-		let file
-		if (obj.type == 'mastodon') file = 'favicon.ico'
-		if (obj.type == 'pleroma') file = 'favicon.png'
-		if (obj.type == 'misskey') file = 'favicon.ico'
-		if (obj.type == 'pixelfed') file = 'img/favicon.png'
-		//webp変換もサイズ変換もDenoでやりたいけど、今のライブラリ量じゃ無理
-        const url = `https://images.weserv.nl/?url=${domain}/${file}&w=20&output=webp`
-        obj.favicon = url
-	} else if(!existsSync(`./resources/${domain}/favicon.webp`)) {
+	obj.domain = domain
+	if (!obj.favicon) {
+		const url = `https://fedicon.0px.io/get/${domain}`
+		const promise = await fetch(url)
+		const json = await promise.json()
+		if (!json.success) continue
+		let favicon
+        const type = json.type
+        let assets
+		if (type == 'mastodon') assets = 'md'
+		if (type == 'pleroma') assets = 'pl'
+		if (type == 'misskey') assets = 'mi'
+		if (type == 'misskeyv11') assets = 'ml'
+        if (type == 'pixelfed') assets = 'pf'
+        if (!json.isDefault) favicon = json.url
+		if (json.isDefault) favicon = `https://a.0px.io/${assets}.png`
+		obj.favicon = favicon
+	} else {
+        if(obj.favicon.substr(0,8) != 'https://') continue
 		//どこかに画像を置いてもらうことになるよな…
-		const url = `https://images.weserv.nl/?url=${obj.favicon}&w=20&output=webp`
+		const url = `https://c.0px.io/${obj.favicon.replace('https://','')}`
 		obj.favicon = url
 	}
 	write.push(obj)
 }
-ensureDirSync("./output")
+ensureDirSync('./output')
 writeJsonSync('./output/data.json', write)
