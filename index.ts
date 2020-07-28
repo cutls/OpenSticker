@@ -11,12 +11,16 @@ interface ContextParams extends Context {
 const router = new Router()
 router
 	.get('/json', async (context: Context) => {
+		context.response.headers.set('Access-Control-Allow-Origin', '*')
+		context.response.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
 		const data = decoder.decode(await Deno.readFile(`./output/data.json`))
 		const obj = JSON.parse(data)
 		context.response.body = obj
 	})
 	.get('/:type', async (context: ContextParams) => {
 		const type = context.params.type as 'mastodon'
+		context.response.headers.set('Access-Control-Allow-Origin', '*')
+		context.response.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
 		context.response.headers.set('Content-Type', `text/css`)
 		const data = decoder.decode(await Deno.readFile(`./output/data.json`))
 		const obj = JSON.parse(data)
@@ -24,6 +28,8 @@ router
 	})
 	.get('/:type/peers', async (context: ContextParams) => {
 		const type = context.params.type as 'mastodon'
+		context.response.headers.set('Access-Control-Allow-Origin', '*')
+		context.response.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
 		let domain
 		let json: string[]
 		try {
@@ -44,6 +50,8 @@ router
 		context.response.body = createCss(obj, type)
 	})
 	.get('/a/:static', async (context: ContextParams) => {
+		context.response.headers.set('Access-Control-Allow-Origin', '*')
+		context.response.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
 		const png = context.params.static
 		console.log(png)
 		context.response.headers.set('Content-Type', `image/png`)
