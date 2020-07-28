@@ -1,11 +1,4 @@
 {
     type: 'mastodon',
     name: 'Cutls',
-    bgColor: [
-        //Array of background-color from left to right
-        '#fff'
-    ],
-    fontColor: '#000',
-    //must https://
-    favicon: null
 }
