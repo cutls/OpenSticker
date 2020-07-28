@@ -52,7 +52,7 @@ for (const alphabet of alphabets) {
 				if (type == 'misskeyv11') assets = 'ml'
 				if (type == 'pixelfed') assets = 'pf'
 				if (!json.isDefault) favicon = `https://c.0px.io/${json.url.replace('https://', '')}`
-				if (json.isDefault) favicon = `https://s.0px.io/${assets}`
+				if (json.isDefault) favicon = `https://s.0px.io/a/${assets}`
 				obj.favicon = favicon
 				writeCache[domain] = favicon
 			} else {
