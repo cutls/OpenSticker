@@ -21,15 +21,26 @@ for (const alphabet of alphabets) {
 		const camelCase = camelize(domain)
 		if (domain == 'resources') continue
 		if (domain.match(/[/\\]|\s/)) continue
-		const read = decoder.decode(await Deno.readFile(`./resources/${domain}/data.json5`))
+		let read
+		try {
+			read = decoder.decode(await Deno.readFile(`./resources/${alphabet}/${domain}/data.json5`))
+		} catch {
+			continue
+		}
 		let obj = JSON5.parse(read) as IStickerOutPut
 		obj.domain = domain
 		if (!obj.name) obj.name = domain
 		if (!obj.favicon) {
 			if (!cache || !cache[domain]) {
+				console.log('no cache:' + domain)
 				const url = `https://fedicon.0px.io/get/${domain}`
 				const promise = await fetch(url)
-				const json = await promise.json()
+				let json
+				try {
+					json = await promise.json()
+				} catch {
+					continue
+				}
 				if (!json.success) continue
 				let favicon
 				const type = json.type
@@ -40,7 +51,7 @@ for (const alphabet of alphabets) {
 				if (type == 'misskeyv11') assets = 'ml'
 				if (type == 'pixelfed') assets = 'pf'
 				if (!json.isDefault) favicon = json.url
-				if (json.isDefault) favicon = `https://a.0px.io/${assets}.png`
+				if (json.isDefault) favicon = `https://s.0px.io/${assets}`
 				obj.favicon = favicon
 				writeCache[domain] = favicon
 			} else {
