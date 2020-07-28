@@ -6,6 +6,7 @@ const decoder = new TextDecoder('utf-8')
 interface ContextParams extends Context {
 	params: usefulObj
 }
+//usefulObj、最低愛悪の型命名
 
 const router = new Router()
 router

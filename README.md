@@ -2,6 +2,15 @@
 バックエンド
 
 Denoで書いた。
+
+デプロイ先: https://c.0px.io
+
+API
+
+* `/json`: json形式そのまま
+* `/mastodon`: Mastodon対応CSS
+* `/mastodon/peers?domain=domain.tld`: domain.tldの連合先だけにフィルタしたCSS(Mastodon用)
+
 ```
 {
     //'mastodon'|'pleroma'|'misskey'|'misskeylegacy'|'pixelfed'
