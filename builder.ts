@@ -2,6 +2,7 @@ import JSON5 from 'https://cdn.jsdelivr.net/gh/cutls/json5-deno@0.0.1/lib/index.
 import { IStickerOutPut } from './interfaces/json5.ts'
 import { walkSync, readJsonSync, writeJsonSync, ensureDirSync, ensureFileSync } from 'https://deno.land/std/fs/mod.ts'
 const decoder = new TextDecoder('utf-8')
+const alphabets = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0']
 /*
 チェック
 ・ドメイン名のバリデーション
@@ -13,51 +14,53 @@ let cache = null
 try {
 	cache = readJsonSync('./output/cache.json') as null | { [key: string]: string }
 } catch {}
-
-for (const entry of walkSync('./resources')) {
-	if (!entry.isDirectory) continue
-	const domain = entry.name
-	const camelCase = camelize(domain)
-	if (domain == 'resources') continue
-	if (domain.match(/[/\\]|\s/)) continue
-	const read = decoder.decode(await Deno.readFile(`./resources/${domain}/data.json5`))
-	let obj = JSON5.parse(read) as IStickerOutPut
-	obj.domain = domain
-	if (!obj.name) obj.name = domain
-	if (!obj.favicon) {
-		if (!cache || !cache[domain]) {
-			const url = `https://fedicon.0px.io/get/${domain}`
-			const promise = await fetch(url)
-			const json = await promise.json()
-			if (!json.success) continue
-			let favicon
-			const type = json.type
-			let assets
-			if (type == 'mastodon') assets = 'md'
-			if (type == 'pleroma') assets = 'pl'
-			if (type == 'misskey') assets = 'mi'
-			if (type == 'misskeyv11') assets = 'ml'
-			if (type == 'pixelfed') assets = 'pf'
-			if (!json.isDefault) favicon = json.url
-			if (json.isDefault) favicon = `https://a.0px.io/${assets}.png`
-			obj.favicon = favicon
-			writeCache[domain] = favicon
+for (const alphabet of alphabets) {
+	for (const entry of walkSync(`./resources/${alphabet}`)) {
+		if (!entry.isDirectory) continue
+		const domain = entry.name
+		const camelCase = camelize(domain)
+		if (domain == 'resources') continue
+		if (domain.match(/[/\\]|\s/)) continue
+		const read = decoder.decode(await Deno.readFile(`./resources/${domain}/data.json5`))
+		let obj = JSON5.parse(read) as IStickerOutPut
+		obj.domain = domain
+		if (!obj.name) obj.name = domain
+		if (!obj.favicon) {
+			if (!cache || !cache[domain]) {
+				const url = `https://fedicon.0px.io/get/${domain}`
+				const promise = await fetch(url)
+				const json = await promise.json()
+				if (!json.success) continue
+				let favicon
+				const type = json.type
+				let assets
+				if (type == 'mastodon') assets = 'md'
+				if (type == 'pleroma') assets = 'pl'
+				if (type == 'misskey') assets = 'mi'
+				if (type == 'misskeyv11') assets = 'ml'
+				if (type == 'pixelfed') assets = 'pf'
+				if (!json.isDefault) favicon = json.url
+				if (json.isDefault) favicon = `https://a.0px.io/${assets}.png`
+				obj.favicon = favicon
+				writeCache[domain] = favicon
+			} else {
+				obj.favicon = cache[domain]
+				writeCache[domain] = cache[domain]
+			}
 		} else {
-			obj.favicon = cache[domain]
-			writeCache[domain] = cache[domain]
+			if (obj.favicon.substr(0, 8) != 'https://') continue
+			//どこかに画像を置いてもらうことになるよな…
+			const url = `https://c.0px.io/${obj.favicon.replace('https://', '')}`
+			obj.favicon = url
 		}
-	} else {
-		if (obj.favicon.substr(0, 8) != 'https://') continue
-		//どこかに画像を置いてもらうことになるよな…
-		const url = `https://c.0px.io/${obj.favicon.replace('https://', '')}`
-		obj.favicon = url
+		write.push(obj)
 	}
-	write.push(obj)
 }
+
 ensureDirSync('./output')
 const output = {
 	data: write,
-	updated: new Date().toString()
+	updated: new Date().toString(),
 }
 writeJsonSync('./output/data.json', output)
 writeJsonSync('./output/cache.json', writeCache)
