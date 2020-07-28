@@ -29,7 +29,7 @@ API
     //指定しない(nullまたは省略)とインスタンスのfaviconを取得します
 }
 ```
-を、resources/domain.tld(cutls.comなど)のdata.json5につっこんでPRを出してください。 
+を、resources/頭文字(数字なら0, Punycodeならx)/domain.tld(cutls.comなど)のdata.json5につっこんでPRを出してください。 
 JSON5はJSONのスーパーセットなのでJSONを書いて拡張子だけ.json5にしてもらってもOKです。  
 faviconを指定するときはCDNが通った外部URLを指定してください。用意できない場合はGitHubのdomain.tld内においてGitHub CDN等のURLを指定してください。  
 `misskeylegacy`はv11やめいすきー(v10)等用に指定します。
