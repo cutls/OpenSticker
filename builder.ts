@@ -15,6 +15,7 @@ try {
 	cache = readJsonSync('./output/cache.json') as null | { [key: string]: string }
 } catch {}
 for (const alphabet of alphabets) {
+	ensureDirSync(`./resources/${alphabet}`)
 	for (const entry of walkSync(`./resources/${alphabet}`)) {
 		if (!entry.isDirectory) continue
 		const domain = entry.name

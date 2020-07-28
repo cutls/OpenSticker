@@ -43,8 +43,9 @@ router
 		obj.data = filtered
 		context.response.body = createCss(obj, type)
 	})
-	.get('/:static', async (context: ContextParams) => {
+	.get('/a/:static', async (context: ContextParams) => {
 		const png = context.params.static
+		console.log(png)
 		context.response.headers.set('Content-Type', `image/png`)
 		context.response.body = await Deno.readFile(`./static/${png}.png`)
 	})
