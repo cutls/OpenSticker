@@ -42,7 +42,7 @@ for (const alphabet of alphabets) {
 					continue
 				}
 				if (!json.success) continue
-				let favicon
+				let favicon: string = ''
 				const type = json.type
 				let assets
 				if (type == 'mastodon') assets = 'md'
@@ -50,7 +50,7 @@ for (const alphabet of alphabets) {
 				if (type == 'misskey') assets = 'mi'
 				if (type == 'misskeyv11') assets = 'ml'
 				if (type == 'pixelfed') assets = 'pf'
-				if (!json.isDefault) favicon = json.url
+				if (!json.isDefault) favicon = `https://c.0px.io/${json.url.replace('https://', '')}`
 				if (json.isDefault) favicon = `https://s.0px.io/${assets}`
 				obj.favicon = favicon
 				writeCache[domain] = favicon
@@ -59,7 +59,6 @@ for (const alphabet of alphabets) {
 				writeCache[domain] = cache[domain]
 			}
 		} else {
-			if (obj.favicon.substr(0, 8) != 'https://') continue
 			//どこかに画像を置いてもらうことになるよな…
 			const url = `https://c.0px.io/${obj.favicon.replace('https://', '')}`
 			obj.favicon = url
