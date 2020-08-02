@@ -22,7 +22,7 @@ API
         //Array of background-color from left to right
         '#fff'
     ],
-    //fontColorはnullだ指定しない(nullまたは省略)と白(#fff)
+    //fontColorは指定しない(nullまたは省略)と白(#fff)
     fontColor: '#000',
     //must https://
     favicon: null
