@@ -5,6 +5,7 @@ import { IStickerOutPut, usefulObj, dataJson } from './interfaces/json5.ts'
 import { Config } from './interfaces/config.ts'
 import builder from './builder.ts'
 import { readJsonSync } from 'https://deno.land/std/fs/mod.ts'
+const sleep = (msec: number) => new Promise(resolve => setTimeout(resolve, msec))
 
 const decoder = new TextDecoder('utf-8')
 let config = {secret: ''}
@@ -64,6 +65,7 @@ router
 	})
 	.post('/webhook/:secret', async (context: ContextParams) => {
 		const secret = context.params.secret
+		await sleep(3000)
 		if(secret != config.secret) {
 			context.response.body = { success: false }
 			return
