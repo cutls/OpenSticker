@@ -3,7 +3,7 @@
 
 Denoで書いた。
 
-デプロイ先: https://c.0px.io
+デプロイ先: https://s.0px.io
 
 API
 

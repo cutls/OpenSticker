@@ -1,5 +1,7 @@
-
 {
- type: 'mastodon'
+    type: 'mastodon',
+    name: 'popon',
+    bgColor: [
+        '#ffbf00'
+    ]
 }
-        
