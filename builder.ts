@@ -5,7 +5,7 @@ const decoder = new TextDecoder('utf-8')
 const alphabets = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0']
 const def = {
 	mastodon: {
-		bgColor: ['#123'],
+		bgColor: ['#26a'],
 		fontColor: '#fff'
 	},
 	pleroma: {
