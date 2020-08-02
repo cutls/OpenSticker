@@ -69,7 +69,7 @@ router
 			context.response.body = { success: false }
 			return
 		}
-		await sleep(3000)
+		await sleep(1000)
 		builder()
 		context.response.body = { success: true }
 	})
