@@ -65,11 +65,11 @@ router
 	})
 	.post('/webhook/:secret', async (context: ContextParams) => {
 		const secret = context.params.secret
-		await sleep(3000)
 		if(secret != config.secret) {
 			context.response.body = { success: false }
 			return
 		}
+		await sleep(3000)
 		builder()
 		context.response.body = { success: true }
 	})

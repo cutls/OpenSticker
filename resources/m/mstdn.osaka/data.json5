@@ -1,5 +1,6 @@
 
 {
- type: 'mastodon'
+ type: 'mastodon',
+ name: '大阪丼'
 }
         

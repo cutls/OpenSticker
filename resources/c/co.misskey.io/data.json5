@@ -1,5 +1,6 @@
 
 {
- type: 'misskey'
+ type: 'misskey',
+ name: 'co.misskey.io'
 }
         

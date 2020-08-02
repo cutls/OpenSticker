@@ -1,5 +1,6 @@
 
 {
- type: 'mastodon'
+ type: 'mastodon',
+ name: 'felesitas.cloud '
 }
         
