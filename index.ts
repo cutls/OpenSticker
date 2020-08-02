@@ -62,7 +62,7 @@ router
 		context.response.headers.set('Content-Type', `image/png`)
 		context.response.body = await Deno.readFile(`./static/${png}.png`)
 	})
-	.get('/webhook/:secret', async (context: ContextParams) => {
+	.post('/webhook/:secret', async (context: ContextParams) => {
 		const secret = context.params.secret
 		if(secret != config.secret) {
 			context.response.body = { success: false }
