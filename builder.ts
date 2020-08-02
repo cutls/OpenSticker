@@ -7,74 +7,83 @@ const alphabets = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','
 チェック
 ・ドメイン名のバリデーション
 */
-let writeCache: { [key: string]: string } = {}
-let write = []
-ensureFileSync('./output/cache.json')
-let cache = null
-try {
-	cache = readJsonSync('./output/cache.json') as null | { [key: string]: string }
-} catch {}
-for (const alphabet of alphabets) {
-	ensureDirSync(`./resources/${alphabet}`)
-	for (const entry of walkSync(`./resources/${alphabet}`)) {
-		if (!entry.isDirectory) continue
-		const domain = entry.name
-		const camelCase = camelize(domain)
-		if (domain == 'resources') continue
-		if (domain.match(/[/\\]|\s/)) continue
-		let read
-		try {
-			read = decoder.decode(await Deno.readFile(`./resources/${alphabet}/${domain}/data.json5`))
-		} catch {
-			continue
-		}
-		let obj = JSON5.parse(read) as IStickerOutPut
-		obj.domain = domain
-		if (!obj.name) obj.name = domain
-		if (!obj.favicon) {
-			if (!cache || !cache[domain]) {
-				console.log('no cache:' + domain)
-				const url = `https://fedicon.0px.io/get/${domain}`
-				const promise = await fetch(url)
-				let json
-				try {
-					json = await promise.json()
-				} catch {
-					continue
-				}
-				if (!json.success) continue
-				let favicon: string = ''
-				const type = json.type
-				let assets
-				if (type == 'mastodon') assets = 'md'
-				if (type == 'pleroma') assets = 'pl'
-				if (type == 'misskey') assets = 'mi'
-				if (type == 'misskeyv11') assets = 'ml'
-				if (type == 'pixelfed') assets = 'pf'
-				if (!json.isDefault) favicon = `https://c.0px.io/${json.url.replace('https://', '')}`
-				if (json.isDefault) favicon = `https://s.0px.io/a/${assets}`
-				obj.favicon = favicon
-				writeCache[domain] = favicon
-			} else {
-				obj.favicon = cache[domain]
-				writeCache[domain] = cache[domain]
+export default function() {
+	main()
+}
+async function main() {
+	let writeCache: { [key: string]: string } = {}
+	let write = []
+	ensureFileSync('./output/cache.json')
+	let cache = null
+	try {
+		cache = readJsonSync('./output/cache.json') as null | { [key: string]: string }
+	} catch {}
+	for (const alphabet of alphabets) {
+		ensureDirSync(`./resources/${alphabet}`)
+		for (const entry of walkSync(`./resources/${alphabet}`)) {
+			if (!entry.isDirectory) continue
+			const domain = entry.name
+			const camelCase = camelize(domain)
+			if (domain == 'resources') continue
+			if (domain.match(/[/\\]|\s/)) continue
+			let read
+			try {
+				read = decoder.decode(await Deno.readFile(`./resources/${alphabet}/${domain}/data.json5`))
+			} catch {
+				continue
 			}
-		} else {
-			//どこかに画像を置いてもらうことになるよな…
-			const url = `https://c.0px.io/${obj.favicon.replace('https://', '')}`
-			obj.favicon = url
+			let obj = JSON5.parse(read) as IStickerOutPut
+			obj.domain = domain
+			if (!obj.name) obj.name = domain
+			if (!obj.favicon) {
+				if (!cache || !cache[domain]) {
+					console.log('no cache:' + domain)
+					const url = `https://fedicon.0px.io/get/${domain}`
+					const promise = await fetch(url)
+					let json
+					try {
+						json = await promise.json()
+					} catch {
+						continue
+					}
+					if (!json.success) continue
+					let favicon: string = ''
+					const type = json.type
+					let assets
+					if (type == 'mastodon') assets = 'md'
+					if (type == 'pleroma') assets = 'pl'
+					if (type == 'misskey') assets = 'mi'
+					if (type == 'misskeyv11') assets = 'ml'
+					if (type == 'pixelfed') assets = 'pf'
+					if (!json.isDefault) favicon = `https://c.0px.io/${json.url.replace('https://', '')}`
+					if (json.isDefault) favicon = `https://s.0px.io/a/${assets}`
+					obj.isDefault = false
+					if(json.isDefault && !json.bgColor && !json.fontColor) obj.isDefault = true
+					obj.favicon = favicon
+					writeCache[domain] = favicon
+				} else {
+					obj.favicon = cache[domain]
+					obj.isDefault = false
+					if(~obj.favicon.indexOf('https://s.0px.io/a/') && !obj.bgColor && !obj.fontColor) obj.isDefault = true
+					writeCache[domain] = cache[domain]
+				}
+			} else {
+				//どこかに画像を置いてもらうことになるよな…
+				const url = `https://c.0px.io/${obj.favicon.replace('https://', '')}`
+				obj.favicon = url
+			}
+			write.push(obj)
 		}
-		write.push(obj)
 	}
+	
+	ensureDirSync('./output')
+	const output = {
+		data: write,
+		updated: new Date().toString(),
+	}
+	writeJsonSync('./output/data.json', output)
+	writeJsonSync('./output/cache.json', writeCache)
 }
-
-ensureDirSync('./output')
-const output = {
-	data: write,
-	updated: new Date().toString(),
-}
-writeJsonSync('./output/data.json', output)
-writeJsonSync('./output/cache.json', writeCache)
 
 function camelize(str: string) {
 	let arr = str.split('.')

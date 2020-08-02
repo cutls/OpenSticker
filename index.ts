@@ -1,7 +1,16 @@
 import { Application, Router, Context, helpers } from 'https://deno.land/x/oak/mod.ts'
+import JSON5 from 'https://cdn.jsdelivr.net/gh/cutls/json5-deno@0.0.1/lib/index.ts'
 import createCss from './createCss.ts'
-import { IStickerOutPut, usefulObj } from './interfaces/json5.ts'
+import { IStickerOutPut, usefulObj, dataJson } from './interfaces/json5.ts'
+import { Config } from './interfaces/config.ts'
+import builder from './builder.ts'
+import { readJsonSync } from 'https://deno.land/std/fs/mod.ts'
+
 const decoder = new TextDecoder('utf-8')
+let config = {secret: ''}
+try {
+	config = JSON.parse(decoder.decode(await Deno.readFile(`./config.json5`))) as Config
+} catch {}
 
 interface ContextParams extends Context {
 	params: usefulObj
@@ -13,8 +22,7 @@ router
 	.get('/json', async (context: Context) => {
 		context.response.headers.set('Access-Control-Allow-Origin', '*')
 		context.response.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-		const data = decoder.decode(await Deno.readFile(`./output/data.json`))
-		const obj = JSON.parse(data)
+		const obj = readJsonSync(`./output/data.json`) as dataJson
 		context.response.body = obj
 	})
 	.get('/:type', async (context: ContextParams) => {
@@ -22,8 +30,7 @@ router
 		context.response.headers.set('Access-Control-Allow-Origin', '*')
 		context.response.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
 		context.response.headers.set('Content-Type', `text/css`)
-		const data = decoder.decode(await Deno.readFile(`./output/data.json`))
-		const obj = JSON.parse(data)
+		const obj = readJsonSync(`./output/data.json`) as dataJson
 		context.response.body = createCss(obj, type)
 	})
 	.get('/:type/peers', async (context: ContextParams) => {
@@ -41,8 +48,7 @@ router
 			return
 		}
 		context.response.headers.set('Content-Type', `text/css`)
-		const data = decoder.decode(await Deno.readFile(`./output/data.json`))
-		let obj = JSON.parse(data)
+		const obj = readJsonSync(`./output/data.json`) as dataJson
 		let filtered = obj.data.filter(function (item: IStickerOutPut, index: number) {
 			if (json.indexOf(item.domain) >= 0) return true
 		})
@@ -53,9 +59,16 @@ router
 		context.response.headers.set('Access-Control-Allow-Origin', '*')
 		context.response.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
 		const png = context.params.static
-		console.log(png)
 		context.response.headers.set('Content-Type', `image/png`)
 		context.response.body = await Deno.readFile(`./static/${png}.png`)
+	})
+	.get('/webhook', async (context: ContextParams) => {
+		const secret = context.params.secret
+		if(secret != config.secret) {
+			context.response.body = { success: false }
+			return
+		}
+		builder()
 	})
 
 const app = new Application()
