@@ -9,7 +9,7 @@ import { readJsonSync } from 'https://deno.land/std/fs/mod.ts'
 const decoder = new TextDecoder('utf-8')
 let config = {secret: ''}
 try {
-	config = JSON.parse(decoder.decode(await Deno.readFile(`./config.json5`))) as Config
+	config = JSON5.parse(decoder.decode(await Deno.readFile(`./config.json5`))) as Config
 } catch {}
 
 interface ContextParams extends Context {
@@ -69,6 +69,7 @@ router
 			return
 		}
 		builder()
+		context.response.body = { success: true }
 	})
 
 const app = new Application()
