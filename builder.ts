@@ -3,6 +3,28 @@ import { IStickerOutPut } from './interfaces/json5.ts'
 import { walkSync, readJsonSync, writeJsonSync, ensureDirSync, ensureFileSync } from 'https://deno.land/std/fs/mod.ts'
 const decoder = new TextDecoder('utf-8')
 const alphabets = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0']
+const def = {
+	mastodon: {
+		bgColor: ['#123'],
+		fontColor: '#fff'
+	},
+	pleroma: {
+		bgColor: ['#123'],
+		fontColor: '#da5'
+	},
+	misskey: {
+		bgColor: ['#444'],
+		fontColor: '#3c9'
+	},
+	misskeylegacy: {
+		bgColor: ['#444'],
+		fontColor: '#3c9'
+	},
+	pixelfed: {
+		bgColor: ['#fff'],
+		fontColor: '#000'
+	}
+}
 /*
 チェック
 ・ドメイン名のバリデーション
@@ -80,6 +102,7 @@ async function main() {
 	const output = {
 		data: write,
 		updated: new Date().toString(),
+		default: def
 	}
 	writeJsonSync('./output/data.json', output)
 	writeJsonSync('./output/cache.json', writeCache)
