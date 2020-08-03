@@ -37,7 +37,7 @@ export default function (raw: {updated: string, data: IStickerOutPut[]}, type: '
 		}
 		let isDefault = false
 		if (favicon == `https://s.0px.io/a/${tl}`) isDefault = true
-		if(!isDefault && favicon) favicon = `https://s.0px.io/c/${encodeURIComponent(favicon.replace('https://', ''))}`
+		if(!isDefault && favicon) favicon = `https://f.0px.io/c/${btoa(favicon.replace('https://', ''))}`
 		let faviconCSS = `no-repeat url('${favicon}')`
 		if (isDefault) faviconCSS = `var(--${tl}f)`
 		if (!fontColor) fontColor = `var(--${tl}c)`
