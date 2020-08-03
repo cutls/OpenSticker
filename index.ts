@@ -63,6 +63,14 @@ router
 		context.response.headers.set('Content-Type', `image/png`)
 		context.response.body = await Deno.readFile(`./static/${png}.png`)
 	})
+	.get('/c/:static', async (context: ContextParams) => {
+		context.response.headers.set('Access-Control-Allow-Origin', '*')
+		context.response.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+		const png = decodeURI(context.params.static)
+		const promise = await fetch(`https://images.weserv.nl/?output=png&w=25&url=${png}`)
+		context.response.headers.set('Content-Type', `image/png`)
+		context.response.body = await promise.text()
+	})
 	.post('/webhook/:secret', async (context: ContextParams) => {
 		const secret = context.params.secret
 		if(secret != config.secret) {
