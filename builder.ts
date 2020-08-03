@@ -60,6 +60,7 @@ async function main() {
 			if (!obj.name) obj.name = domain
 			if (newObj.bgColor) newObj.bgColor = obj.bgColor
 			if (newObj.fontColor) newObj.fontColor = obj.fontColor
+			newObj.type = obj.type
 			if (!obj.favicon) {
 				if (!cache || !cache[domain]) {
 					console.log('no cache:' + domain)
