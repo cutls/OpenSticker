@@ -92,9 +92,16 @@ async function main() {
 					writeCache[domain] = favicon
 				} else {
 					newObj.withoutCDN = cache[domain]
-					newObj.favicon = `https://f.0px.io/c/${btoa(cache[domain].replace('https://', ''))}`
+					if(obj.favicon) newObj.favicon = obj.favicon
 					newObj.isDefault = false
-					if (~newObj.favicon.indexOf('https://s.0px.io/c/') && !obj.bgColor && !obj.fontColor) newObj.isDefault = true
+					if(!obj.favicon) {
+						if(~cache[domain].indexOf('https://s.0px.io/a/')) {
+							newObj.isDefault = true
+							newObj.favicon = cache[domain]
+						} else [
+							newObj.favicon = `https://f.0px.io/c/${btoa(cache[domain].replace('https://', ''))}`
+						]
+					}
 					writeCache[domain] = cache[domain]
 				}
 			} else {
