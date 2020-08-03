@@ -91,7 +91,7 @@ async function main() {
 				}
 			} else {
 				//どこかに画像を置いてもらうことになるよな…
-				const url = `https://s.0px.io/c/fix${encodeURI(obj.favicon.replace('https://', ''))}`
+				const url = `https://s.0px.io/c/${encodeURI(obj.favicon.replace('https://', ''))}`
 				obj.favicon = url
 			}
 			write.push(obj)
