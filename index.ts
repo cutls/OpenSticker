@@ -66,7 +66,7 @@ router
 	.get('/c/:static', async (context: ContextParams) => {
 		context.response.headers.set('Access-Control-Allow-Origin', '*')
 		context.response.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-		const png = decodeURI(context.params.static)
+		const png = decodeURIComponent(context.params.static)
 		const promise = await fetch(`https://images.weserv.nl/?output=png&w=25&url=${png}`)
 		context.response.headers.set('Content-Type', `image/png`)
 		context.response.body = await promise.text()

@@ -77,7 +77,7 @@ async function main() {
 					if (type == 'misskey') assets = 'mi'
 					if (type == 'misskeyv11') assets = 'ml'
 					if (type == 'pixelfed') assets = 'pf'
-					if (!json.isDefault) favicon = `https://s.0px.io/c/${encodeURI(json.url.replace('https://', ''))}`
+					if (!json.isDefault) favicon = `https://s.0px.io/c/${encodeURIComponent(json.url.replace('https://', ''))}`
 					if (json.isDefault) favicon = `https://s.0px.io/a/${assets}`
 					obj.isDefault = false
 					if(json.isDefault && !json.bgColor && !json.fontColor) obj.isDefault = true
@@ -91,7 +91,7 @@ async function main() {
 				}
 			} else {
 				//どこかに画像を置いてもらうことになるよな…
-				const url = `https://s.0px.io/c/${encodeURI(obj.favicon.replace('https://', ''))}`
+				const url = `https://s.0px.io/c/${encodeURIComponent(obj.favicon.replace('https://', ''))}`
 				obj.favicon = url
 			}
 			write.push(obj)
