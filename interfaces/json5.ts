@@ -11,6 +11,7 @@ export interface IStickerOutPut {
     bgColor?: string[] | null,
     fontColor?: string | null,
     favicon: string,
+    withoutCDN: string,
     domain: string,
     isDefault: boolean
 }

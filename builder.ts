@@ -1,35 +1,35 @@
 import JSON5 from 'https://cdn.jsdelivr.net/gh/cutls/json5-deno@0.0.1/lib/index.ts'
-import { IStickerOutPut } from './interfaces/json5.ts'
+import { ISticker, IStickerOutPut } from './interfaces/json5.ts'
 import { walkSync, readJsonSync, writeJsonSync, ensureDirSync, ensureFileSync } from 'https://deno.land/std/fs/mod.ts'
 const decoder = new TextDecoder('utf-8')
-const alphabets = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0']
+const alphabets = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0']
 const def = {
 	mastodon: {
 		bgColor: ['#26a'],
-		fontColor: '#fff'
+		fontColor: '#fff',
 	},
 	pleroma: {
 		bgColor: ['#123'],
-		fontColor: '#da5'
+		fontColor: '#da5',
 	},
 	misskey: {
 		bgColor: ['#444'],
-		fontColor: '#3c9'
+		fontColor: '#3c9',
 	},
 	misskeylegacy: {
 		bgColor: ['#444'],
-		fontColor: '#3c9'
+		fontColor: '#3c9',
 	},
 	pixelfed: {
 		bgColor: ['#fff'],
-		fontColor: '#000'
-	}
+		fontColor: '#000',
+	},
 }
 /*
 チェック
 ・ドメイン名のバリデーション
 */
-export default function() {
+export default function () {
 	main()
 }
 async function main() {
@@ -54,9 +54,12 @@ async function main() {
 			} catch {
 				continue
 			}
-			let obj = JSON5.parse(read) as IStickerOutPut
-			obj.domain = domain
+			let obj = JSON5.parse(read) as ISticker
+			let newObj = {} as IStickerOutPut
+			newObj.domain = domain
 			if (!obj.name) obj.name = domain
+			if (newObj.bgColor) newObj.bgColor = obj.bgColor
+			if (newObj.fontColor) newObj.fontColor = obj.fontColor
 			if (!obj.favicon) {
 				if (!cache || !cache[domain]) {
 					console.log('no cache:' + domain)
@@ -79,30 +82,33 @@ async function main() {
 					if (type == 'pixelfed') assets = 'pf'
 					if (!json.isDefault) favicon = `https://f.0px.io/c/${btoa(json.url.replace('https://', ''))}`
 					if (json.isDefault) favicon = `https://s.0px.io/a/${assets}`
-					obj.isDefault = false
-					if(json.isDefault && !json.bgColor && !json.fontColor) obj.isDefault = true
-					obj.favicon = favicon
+					let rawFavicon = favicon
+					newObj.withoutCDN = rawFavicon
+					if (!json.isDefault) rawFavicon = json.url
+					newObj.isDefault = false
+					if (json.isDefault && !json.bgColor && !json.fontColor) newObj.isDefault = true
+					newObj.favicon = favicon
 					writeCache[domain] = favicon
 				} else {
-					obj.favicon = cache[domain]
-					obj.isDefault = false
-					if(~obj.favicon.indexOf('https://s.0px.io/a/') && !obj.bgColor && !obj.fontColor) obj.isDefault = true
+					newObj.withoutCDN = cache[domain]
+					newObj.favicon = `https://f.0px.io/c/${btoa(cache[domain].replace('https://', ''))}`
+					newObj.isDefault = false
+					if (~newObj.favicon.indexOf('https://s.0px.io/c/') && !obj.bgColor && !obj.fontColor) newObj.isDefault = true
 					writeCache[domain] = cache[domain]
 				}
 			} else {
 				//どこかに画像を置いてもらうことになるよな…
-				const url = `https://f.0px.io/c/${btoa(obj.favicon.replace('https://', ''))}`
-				obj.favicon = url
+				newObj.withoutCDN = obj.favicon
 			}
 			write.push(obj)
 		}
 	}
-	
+
 	ensureDirSync('./output')
 	const output = {
 		data: write,
 		updated: new Date().toString(),
-		default: def
+		default: def,
 	}
 	writeJsonSync('./output/data.json', output)
 	writeJsonSync('./output/cache.json', writeCache)
