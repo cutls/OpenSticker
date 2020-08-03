@@ -57,7 +57,7 @@ async function main() {
 			let obj = JSON5.parse(read) as ISticker
 			let newObj = {} as IStickerOutPut
 			newObj.domain = domain
-			if (!obj.name) obj.name = domain
+			obj.name ? newObj.name = obj.name : newObj.name = domain
 			if (newObj.bgColor) newObj.bgColor = obj.bgColor
 			if (newObj.fontColor) newObj.fontColor = obj.fontColor
 			newObj.type = obj.type
