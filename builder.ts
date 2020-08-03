@@ -98,6 +98,7 @@ async function main() {
 				}
 			} else {
 				//どこかに画像を置いてもらうことになるよな…
+				newObj.favicon = `https://f.0px.io/c/${btoa(obj.favicon.replace('https://', ''))}`
 				newObj.withoutCDN = obj.favicon
 			}
 			write.push(newObj)
