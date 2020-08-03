@@ -100,7 +100,7 @@ async function main() {
 				//どこかに画像を置いてもらうことになるよな…
 				newObj.withoutCDN = obj.favicon
 			}
-			write.push(obj)
+			write.push(newObj)
 		}
 	}
 
