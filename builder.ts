@@ -58,8 +58,8 @@ async function main() {
 			let newObj = {} as IStickerOutPut
 			newObj.domain = domain
 			obj.name ? newObj.name = obj.name : newObj.name = domain
-			if (newObj.bgColor) newObj.bgColor = obj.bgColor
-			if (newObj.fontColor) newObj.fontColor = obj.fontColor
+			if (obj.bgColor) newObj.bgColor = obj.bgColor
+			if (obj.fontColor) newObj.fontColor = obj.fontColor
 			newObj.type = obj.type
 			if (!obj.favicon) {
 				if (!cache || !cache[domain]) {
