@@ -11,6 +11,15 @@ API
 * `/mastodon`: Mastodon対応CSS
 * `/mastodon/peers?domain=domain.tld`: domain.tldの連合先だけにフィルタしたCSS(Mastodon用)
 
+# データを追加しよう
+
+PRでデータを追加・編集します。
+
+フォークします。
+
+あなたのインスタンスがdomain.tldなら…
+
+`resources/d/domain.tld/data.json5`  
 ```
 {
     //'mastodon'|'pleroma'|'misskey'|'misskeylegacy'|'pixelfed'
@@ -29,7 +38,14 @@ API
     //指定しない(nullまたは省略)とインスタンスのfaviconを取得します
 }
 ```
-を、resources/頭文字(数字なら0, Punycodeならx)/domain.tld(cutls.comなど)のdata.json5につっこんでPRを出してください。 
-JSON5はJSONのスーパーセットなのでJSONを書いて拡張子だけ.json5にしてもらってもOKです。  
-faviconを指定するときはCDNが通った外部URLを指定してください。用意できない場合はGitHubのdomain.tld内においてGitHub CDN等のURLを指定してください。  
+
+と書いてPRを送ってください。
+
+頭文字(sub.domain.tldならs)のフォルダに入れます。
+日本語ドメインならx(punycode)に、数字の場合は0につっこんでください。
+
+JSON5はJSONのスーパーセットなのでJSONを書いて拡張子だけ.json5にしてもらってもOKです。
+
+faviconを指定するときはCDNが通った外部URLを指定してください。用意できない場合はGitHubのdomain.tld内においてGitHub CDN等のURLを指定してください。
+
 `misskeylegacy`はv11やめいすきー(v10)等用に指定します。
