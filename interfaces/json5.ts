@@ -19,7 +19,7 @@ export interface usefulObj {
     [key: string]: string
 }
 interface Colors {
-    bgColor: string,
+    bgColor: string[],
     fontColor: string
 }
 interface Default {
