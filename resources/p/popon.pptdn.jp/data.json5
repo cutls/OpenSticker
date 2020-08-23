@@ -3,5 +3,6 @@
     name: 'popon',
     bgColor: [
         '#ffbf00'
-    ]
+    ],
+    fontColor: '#000'
 }
