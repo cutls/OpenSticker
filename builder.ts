@@ -1,6 +1,6 @@
 import JSON5 from 'https://cdn.jsdelivr.net/gh/cutls/json5-deno@0.0.1/lib/index.ts'
 import { ISticker, IStickerOutPut } from './interfaces/json5.ts'
-import { walkSync, readJsonSync, writeJsonSync, ensureDirSync, ensureFileSync } from 'https://deno.land/std/fs/mod.ts'
+import { walkSync, readJsonSync, writeJsonSync, ensureDirSync, ensureFileSync } from 'https://deno.land/std@0.68.0/fs/mod.ts'
 const decoder = new TextDecoder('utf-8')
 const alphabets = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0']
 const def = {

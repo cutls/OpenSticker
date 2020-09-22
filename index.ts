@@ -4,7 +4,7 @@ import createCss from './createCss.ts'
 import { IStickerOutPut, usefulObj, dataJson } from './interfaces/json5.ts'
 import { Config } from './interfaces/config.ts'
 import builder from './builder.ts'
-import { readJsonSync } from 'https://deno.land/std/fs/mod.ts'
+import { readJsonSync } from 'https://deno.land/std@0.68.0/fs/mod.ts'
 const sleep = (msec: number) => new Promise(resolve => setTimeout(resolve, msec))
 
 const decoder = new TextDecoder('utf-8')
