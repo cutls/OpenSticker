@@ -33,4 +33,4 @@ jobs:
           deno-version: ${{ matrix.deno }} # tests across multiple Deno versions
 
       - name: Run Build
-        run: deno run --unstable --allow-read --allow-write --allow-net builderCli.ts
+        run: wget -P ./output https://s.0px.io/workflow/cache.json && deno run --unstable --allow-read --allow-write --allow-net builderCli.ts

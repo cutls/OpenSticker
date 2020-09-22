@@ -73,6 +73,12 @@ router
 		builder()
 		context.response.body = { success: true }
 	})
+	.get('/workflow/cache.json', async (context: Context) => {
+		context.response.headers.set('Access-Control-Allow-Origin', '*')
+		context.response.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+		const obj = readJsonSync(`./output/cache.json`) as dataJson
+		context.response.body = obj
+	})
 
 const app = new Application()
 app.use(router.routes())
