@@ -49,3 +49,14 @@ JSON5はJSONのスーパーセットなのでJSONを書いて拡張子だけ.jso
 faviconを指定するときはCDNが通った外部URLを指定してください。用意できない場合はGitHubのdomain.tld内においてGitHub CDN等のURLを指定してください。
 
 `misskeylegacy`はv11やめいすきー(v10)等用に指定します。
+
+# ビルド
+
+`deno run --unstable --allow-read --allow-write --allow-net builderCli.ts`
+
+初回はすべてのfaviconをチェックする都合上、かなり時間がかかります。2回目以降はoutput/cache.jsonにキャッシュされます。
+
+公式キャッシュ(?)として、最新masterに準じたキャッシュを公開しています。 https://s.0px.io/workflow/cache.json
+
+`wget -P ./output https://s.0px.io/workflow/cache.json && deno run --unstable --allow-read --allow-write --allow-net builderCli.ts`  
+で公式キャッシュを使ってビルドできます。
