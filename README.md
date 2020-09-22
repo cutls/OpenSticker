@@ -57,3 +57,6 @@ faviconを指定するときはCDNが通った外部URLを指定してくださ�
 初回はすべてのfaviconをチェックする都合上、かなり時間がかかります。2回目以降はoutput/cache.jsonにキャッシュされます。
 
 公式キャッシュ(?)として、最新masterに準じたキャッシュを公開しています。 https://s.0px.io/workflow/cache.json
+
+`wget -P ./output https://s.0px.io/workflow/cache.json && deno run --unstable --allow-read --allow-write --allow-net builderCli.ts`  
+で公式キャッシュを使ってビルドできます。
