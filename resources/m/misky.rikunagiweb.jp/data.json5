@@ -1,0 +1,10 @@
+{
+    type: 'misskey',
+    name: '凪すky',
+    bgColor: [
+        '#CC7EB1'
+    ],
+    fontColor: '#fff',
+    favicon: 'https://web.rikunagiweb.jp/files/miskey_asset/instance_icon.png',    
+
+}
