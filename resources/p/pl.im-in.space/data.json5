@@ -1,0 +1,7 @@
+
+{
+ type: 'pleroma',
+ name: 'Pleroma/InSpace',
+ favicon: 'https://pl.im-in.space/static/logo.png'
+}
+        
