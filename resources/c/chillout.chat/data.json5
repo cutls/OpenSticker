@@ -1,0 +1,5 @@
+{
+    type: 'mastodon',
+    name: 'Chillout Chat',
+    favicon: null
+}
