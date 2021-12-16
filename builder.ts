@@ -63,10 +63,7 @@ const def = {
 チェック
 ・ドメイン名のバリデーション
 */
-export default function () {
-  main()
-}
-async function main(gitCheck?: boolean) {
+export default async function main(gitCheck?: boolean) {
   if (gitCheck) {
     const p = Deno.run({ cmd: ['git', 'pull'] })
     await p.close()
