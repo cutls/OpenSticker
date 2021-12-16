@@ -65,9 +65,17 @@ const def = {
 */
 export default async function main(gitCheck?: boolean) {
   if (gitCheck) {
-	  console.log('git pull')
-    const p = Deno.run({ cmd: ['git', 'pull'] })
-    await p.close()
+    console.log('git pull')
+    const p = Deno.run({
+      cmd: ['git', 'pull'],
+      stdout: 'piped',
+      stderr: 'piped',
+    })
+
+    const output = await p.output() // "piped" must be set
+    const outStr = new TextDecoder().decode(output)
+    p.close()
+    console.log(outStr)
   }
   let writeCache: { [key: string]: string } = {}
   let write = []
