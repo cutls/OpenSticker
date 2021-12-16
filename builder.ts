@@ -65,6 +65,7 @@ const def = {
 */
 export default async function main(gitCheck?: boolean) {
   if (gitCheck) {
+	  console.log('git pull')
     const p = Deno.run({ cmd: ['git', 'pull'] })
     await p.close()
   }
