@@ -5,6 +5,7 @@ import { IStickerOutPut, usefulObj, dataJson } from './interfaces/json5.ts'
 import { Config } from './interfaces/config.ts'
 import builder from './builder.ts'
 import { readJsonSync } from 'https://deno.land/std@0.68.0/fs/mod.ts'
+
 const sleep = (msec: number) => new Promise(resolve => setTimeout(resolve, msec))
 
 const decoder = new TextDecoder('utf-8')
@@ -69,8 +70,8 @@ router
 			context.response.body = { success: false }
 			return
 		}
-		await sleep(1000)
-		builder()
+		await sleep(2000)
+		builder(true)
 		context.response.body = { success: true }
 	})
 	.get('/workflow/cache.json', async (context: Context) => {
@@ -83,5 +84,4 @@ router
 const app = new Application()
 app.use(router.routes())
 app.use(router.allowedMethods())
-
 await app.listen({ port: 8000 })
