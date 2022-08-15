@@ -1,4 +1,9 @@
 {
  type: 'mastodon',
- name: 'Qdon'
+ name: 'Qdon',
+ bgColor: [
+  '#ffc0fb',
+  '#87ceeb'
+ ],
+ fontColor: '#000'
 }
