@@ -1,4 +1,6 @@
 {
     type: 'misskey',
     name: 'はうンみすきー'
+       favicon: 'https://misskey-haun.imgix.net/favicon.png'
+
 }
