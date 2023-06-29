@@ -3,7 +3,7 @@ import fs from 'fs'
 import JSON5 from 'json5'
 import { detector } from './detector'
 
-const domain = '2m.cutls.com'
+const domain = 'oransns.com'
 const main = async () => {
     const peersRaw = await axios.get(`https://${domain}/api/v1/instance/peers`)
     const peers: string[] = peersRaw.data
@@ -13,14 +13,13 @@ const main = async () => {
         if (cache[peer]) continue
         let alphabet = peer.slice(0, 1)
         if (parseInt(alphabet, 10)) alphabet = '0'
-        if (!fs.existsSync(`./resources/${alphabet}`)) {
-            fs.mkdirSync(`./resources/${alphabet}`)
-        }
-        fs.mkdirSync(`./resources/${alphabet}/${peer}`)
+        if (!fs.existsSync(`./resources/${alphabet}`)) fs.mkdirSync(`./resources/${alphabet}`)
+        if (fs.existsSync(`./resources/${alphabet}/${peer}`)) continue
         try {
-            const det = await detector(null, domain)
+            const det = await detector(null, peer)
             if (!det.success) continue
-            console.log('add', peer)
+            fs.mkdirSync(`./resources/${alphabet}/${peer}`)
+            console.log('add', det, peer)
             const json = {
                 type: det.type
             }
