@@ -1,0 +1,6 @@
+/*
+OpenSticker {{updated}} under MIT LICENSE
+(c)2020 weep, kyori19, cutls
+*/
+:root{--md:linear-gradient(90deg,#26a,transparent);--mdt:linear-gradient(90deg,#26a 84%,transparent);--mdc:#fff;--mdf:no-repeat url(https://s.0px.io/a/md);--pl:linear-gradient(90deg,#123,transparent);--plt:linear-gradient(90deg,#123 84%,transparent);--plc:#da5;--plf:no-repeat url(https://s.0px.io/a/pl);--mi:linear-gradient(90deg,#444,transparent);--mit:linear-gradient(90deg,#444 84%,transparent);--mic:#3c9;--mif:no-repeat url(https://s.0px.io/a/mi);--ml:linear-gradient(90deg,#444,transparent);--mlt:linear-gradient(90deg,#444 84%,transparent);--mlc:#3c9;--mlf:no-repeat url(https://s.0px.io/a/ml);--pf:linear-gradient(90deg,#fff,transparent);--pft:linear-gradient(90deg,#fff 84%,transparent);--pfc:#000;--pff:no-repeat url(https://s.0px.io/a/pf)}
+.status .display-name:after{display:block!important;padding-left:1pc!important}.notification__display-name:after,.status .display-name:after,.status__display-name.muted:after{font-size:9pt!important;height:1pc!important;white-space:pre!important;text-overflow:ellipsis!important;font-weight:bolder!important;background-repeat:no-repeat,no-repeat!important}.notification__display-name:after,.status__display-name.muted:after{display:inline!important;padding:0 1pc!important;margin:0!important;opacity:.4!important}

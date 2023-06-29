@@ -1,0 +1,9 @@
+{
+    type: 'mastodon',
+    bgColor: [
+        '#2a6',
+        '#297'
+    ],
+    fontColor: '#efc',
+    favicon: 'https://cdn.jsdelivr.net/gh/mgmn/kumarin.co@0.0.1/favicon.png'
+}
