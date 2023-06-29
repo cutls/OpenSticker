@@ -11,13 +11,15 @@ const main = async () => {
     const cache = JSON.parse(cacheRaw)
     for (const peer of peers) {
         if (cache[peer]) continue
-        const alphabet = peer.slice(0, 1)
+        let alphabet = peer.slice(0, 1)
+        if (parseInt(alphabet, 10)) alphabet = '0'
         if (!fs.existsSync(`./resources/${alphabet}`)) {
             fs.mkdirSync(`./resources/${alphabet}`)
         }
         fs.mkdirSync(`./resources/${alphabet}/${peer}`)
         try {
             const det = await detector(null, domain)
+            console.log('add', peer)
             const json = {
                 type: det.type
             }
