@@ -19,6 +19,7 @@ const main = async () => {
         fs.mkdirSync(`./resources/${alphabet}/${peer}`)
         try {
             const det = await detector(null, domain)
+            if (!det.success) continue
             console.log('add', peer)
             const json = {
                 type: det.type
