@@ -1,4 +1,4 @@
-import { ISticker, IStickerOutPut } from '../interfaces/json5'
+import { IDetector, ISticker, IStickerOutPut } from '../interfaces/json5'
 import JSON5 from 'json5'
 import fs from 'fs'
 import { createCss } from './createCss'
@@ -63,79 +63,89 @@ export default async function main() {
   let write = []
   const cacheRaw = fs.readFileSync('./output/cache.json').toString()
   const cache = JSON.parse(cacheRaw)
-  for (const alphabet of alphabets) {
-    const dirs = fs.readdirSync(`./resources/${alphabet}`)
-    for (const domain of dirs) {
-      if (!fs.statSync(domain).isDirectory()) continue
-      const camelCase = camelize(domain)
-      if (domain == 'resources') continue
-      if (domain.match(/[/\\]|\s/)) continue
-      const read = fs.readFileSync(`./resources/${alphabet}/${domain}/data.json5`).toString()
-      let obj: ISticker = JSON5.parse(read)
-      let newObj: any = {}
-      newObj.domain = domain
-      obj.name ? (newObj.name = obj.name) : (newObj.name = domain)
-      if (obj.bgColor) newObj.bgColor = obj.bgColor
-      if (obj.fontColor) newObj.fontColor = obj.fontColor
-      newObj.type = obj.type
-      if (!obj.favicon) {
-        if (!cache || !cache[domain]) {
-          console.log('no cache:' + domain)
-          const json = await detector(null, domain)
-          if (!json.success) continue
-          let favicon: string = ''
-          const type = json.type
-          let assets
-          if (type == 'mastodon') assets = 'md'
-          if (type == 'pleroma') assets = 'pl'
-          if (type == 'misskey') assets = 'mi'
-          if (type == 'misskeylegacy') assets = 'ml'
-          if (type == 'pixelfed') assets = 'pf'
-          if (!json.isDefault)
-            favicon = `https://f.0px.io/c/${btoa(
-              json.url.replace('https://', '')
-            )}`
-          if (json.isDefault) favicon = `https://s.0px.io/a/${assets}`
-          let rawFavicon = favicon
-          newObj.withoutCDN = rawFavicon
-          if (!json.isDefault) rawFavicon = json.url
-          newObj.isDefault = false
-          if (json.isDefault && !obj.bgColor && !obj.fontColor)
-            newObj.isDefault = true
-          newObj.favicon = favicon
-          writeCache[domain] = favicon
-        } else {
-          newObj.withoutCDN = cache[domain]
-          if (obj.favicon) newObj.favicon = obj.favicon
-          newObj.isDefault = false
-          if (!obj.favicon) {
-            if (~cache[domain].indexOf('https://s.0px.io/a/')) {
+  try {
+    for (const alphabet of alphabets) {
+      if (!fs.existsSync(`./resources/${alphabet}`)) continue
+      const dirs = fs.readdirSync(`./resources/${alphabet}`)
+      for (const domain of dirs) {
+        if (!fs.statSync(`./resources/${alphabet}/${domain}`).isDirectory()) continue
+        const camelCase = camelize(domain)
+        if (domain == 'resources') continue
+        if (domain.match(/[/\\]|\s/)) continue
+        const read = fs.readFileSync(`./resources/${alphabet}/${domain}/data.json5`).toString()
+        let obj: ISticker = JSON5.parse(read)
+        let newObj: any = {}
+        newObj.domain = domain
+        obj.name ? (newObj.name = obj.name) : (newObj.name = domain)
+        if (obj.bgColor) newObj.bgColor = obj.bgColor
+        if (obj.fontColor) newObj.fontColor = obj.fontColor
+        newObj.type = obj.type
+        if (!obj.favicon) {
+          if (!cache || !cache[domain]) {
+            console.log('no cache:' + domain)
+            let json: IDetector
+            try {
+              json = await detector(null, domain)
+            } catch {
+              continue
+            }
+            if (!json.success) continue
+            let favicon: string = ''
+            const type = json.type
+            let assets
+            if (type == 'mastodon') assets = 'md'
+            if (type == 'pleroma') assets = 'pl'
+            if (type == 'misskey') assets = 'mi'
+            if (type == 'misskeylegacy') assets = 'ml'
+            if (type == 'pixelfed') assets = 'pf'
+            if (!json.isDefault)
+              favicon = `https://images.weserv.nl/?url=${encodeURI(json.url)}&output=png&w=15`
+            if (json.isDefault) favicon = `https://s.0px.io/a/${assets}.png`
+            let rawFavicon = favicon
+            newObj.withoutCDN = rawFavicon
+            if (!json.isDefault) rawFavicon = json.url
+            newObj.isDefault = false
+            if (json.isDefault && !obj.bgColor && !obj.fontColor)
               newObj.isDefault = true
-              newObj.favicon = cache[domain]
-            } else
-              [
-                (newObj.favicon = `https://images.weserv.nl/?url=${encodeURI(cache.domain)}&output=png&w=15`),
-              ]
+            newObj.favicon = favicon
+            writeCache[domain] = favicon
+          } else {
+            newObj.withoutCDN = cache[domain]
+            if (obj.favicon) newObj.favicon = obj.favicon
+            newObj.isDefault = false
+            if (!obj.favicon) {
+              if (~cache[domain].indexOf('https://s.0px.io/a/')) {
+                newObj.isDefault = true
+                newObj.favicon = cache[domain]
+              } else
+                [
+                  (newObj.favicon = `https://images.weserv.nl/?url=${encodeURI(cache.domain)}&output=png&w=15`),
+                ]
+            }
+            writeCache[domain] = cache[domain]
           }
-          writeCache[domain] = cache[domain]
+        } else {
+          //どこかに画像を置いてもらうことになるよな…
+          newObj.favicon = `https://images.weserv.nl/?url=${encodeURI(obj.favicon)}&output=png&w=15`
+          newObj.withoutCDN = obj.favicon
         }
-      } else {
-        //どこかに画像を置いてもらうことになるよな…
-        newObj.favicon = `https://images.weserv.nl/?url=${encodeURI(obj.favicon)}&output=png&w=15`
-        newObj.withoutCDN = obj.favicon
+        write.push(newObj)
       }
-      write.push(newObj)
     }
+    const output = {
+      data: write,
+      updated: new Date().toString(),
+      default: def,
+    }
+    fs.writeFileSync('./output/data.json', JSON.stringify(output))
+    fs.writeFileSync('./output/cache.json', JSON.stringify(writeCache))
+    createCss(output, 'mastodon')
+  } catch (e) {
+    console.error(e)
+    fs.writeFileSync('./output/cache.json', JSON.stringify(writeCache))
   }
-  const output = {
-    data: write,
-    updated: new Date().toString(),
-    default: def,
-  }
-  fs.writeFileSync('./output/data.json', JSON.stringify(output))
-  fs.writeFileSync('./output/cache.json', JSON.stringify(writeCache))
-  createCss(output, 'mastodon')
 }
+main()
 
 function camelize(str: string) {
   let arr = str.split('.')
