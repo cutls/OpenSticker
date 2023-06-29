@@ -43,13 +43,11 @@ async function detect(domain: string) {
 		} catch {
 			//Misskeyである可能性
 			try {
-				const misskey = await axios.post(`https://${domain}/api/meta`, { timeout: 5000 })
+				const misskey = await axios.get(`https://${domain}/nodeinfo/2.0`, { timeout: 5000 })
 				//13以降の動向が不明
 				let v11 = false
 				let data = misskey.data
-				if (!data.version.match(/12\.[0-9]{1,}\.[0-9]{1,}/)) v11 = true
-				type = 'misskey'
-				if (v11) type = 'misskeylegacy'
+				if (data.software.name === 'misskey') type = 'misskey'
 			} catch (e) {
 				type = null
 			}
@@ -70,4 +68,15 @@ async function detect(domain: string) {
 		}
 	}
 	return type
+}
+export const getName = async (type: IType, domain: string) => {
+	if (type === 'mastodon' || type === 'pleroma') {
+		const instanceDataRaw = await axios.get(`https://${domain}/api/v1/instance`, { timeout: 5000 })
+		const instanceData = instanceDataRaw.data
+		return instanceData.title
+	} else if (type === 'misskey') {
+		const instanceDataRaw = await axios.get(`https://${domain}/nodeinfo/2.0`, { timeout: 5000 })
+		const instanceData = instanceDataRaw.data
+		return instanceData.metadata.nodeName
+	}
 }
