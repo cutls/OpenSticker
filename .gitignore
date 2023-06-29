@@ -3,3 +3,4 @@ output/data.json
 output/data.css
 yarn-error.log
 dist
+.DS_Store
