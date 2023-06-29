@@ -51,7 +51,6 @@ async function detect(domain: string) {
 				type = 'misskey'
 				if (v11) type = 'misskeylegacy'
 			} catch (e) {
-				console.log(e)
 				type = null
 			}
 		}
