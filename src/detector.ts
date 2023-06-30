@@ -6,7 +6,8 @@ import url from 'url'
 import { IType } from '../interfaces/config'
 
 export const detector = async (type: IType | null, domain: string) => {
-    let file = null
+	if (domain === 'vivaldi.net') domain = 'social.vivaldi.net'
+	let file = null
 	if (!type) type = await detect(domain)
 	if (!type) throw { success: false }
 	const result = await axios.get(`https://${domain}`, { timeout: 10000, responseType: 'text' })
@@ -19,7 +20,7 @@ export const detector = async (type: IType | null, domain: string) => {
 	const compared = await getCompared(type)
 	const diff = Jimp.distance(gotimg, compared)
 	const isDefault = diff < 0.3
-    return { success: true, difference: diff, type: type, isDefault: isDefault, url: file }
+	return { success: true, difference: diff, type: type, isDefault: isDefault, url: file }
 }
 async function getCompared(type: null | string) {
 	let file
@@ -33,6 +34,7 @@ async function getCompared(type: null | string) {
 	return resized
 }
 async function detect(domain: string) {
+	if (domain === 'vivaldi.net') domain = 'social.vivaldi.net'
 	let type: IType
 	try {
 		const donOrKey = await axios.get(`https://${domain}/favicon.ico`, { timeout: 5000 })
@@ -70,6 +72,7 @@ async function detect(domain: string) {
 	return type
 }
 export const getName = async (type: IType, domain: string) => {
+	if (domain === 'vivaldi.net') domain = 'social.vivaldi.net'
 	if (type === 'mastodon' || type === 'pleroma') {
 		const instanceDataRaw = await axios.get(`https://${domain}/api/v1/instance`, { timeout: 5000 })
 		const instanceData = instanceDataRaw.data

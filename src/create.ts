@@ -109,15 +109,17 @@ export default async function main() {
 						newObj.isDefault = false
 						if (json.isDefault && !obj.bgColor && !obj.fontColor) newObj.isDefault = true
 						newObj.favicon = favicon
-						writeCache[domain] = favicon
+						writeCache[domain] = rawFavicon
 					} else {
 						newObj.withoutCDN = cache[domain]
 						if (obj.favicon) newObj.favicon = obj.favicon
 						newObj.isDefault = false
 						if (!obj.favicon) {
-							newObj.favicon = cache[domain]
 							if (~cache[domain].indexOf('https://s.0px.io/a/')) {
 								newObj.isDefault = true
+								newObj.favicon = cache[domain]
+							} else {
+								newObj.favicon = `https://images.weserv.nl/?url=${encodeURI(cache[domain])}&output=png&w=15`
 							}
 						}
 						writeCache[domain] = cache[domain]
