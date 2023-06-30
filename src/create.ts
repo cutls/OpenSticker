@@ -119,7 +119,7 @@ export default async function main() {
                 newObj.favicon = cache[domain]
               } else
                 [
-                  (newObj.favicon = `https://images.weserv.nl/?url=${encodeURI(cache.domain)}&output=png&w=15`),
+                  (newObj.favicon = `https://images.weserv.nl/?url=${encodeURI(cache[domain])}&output=png&w=15`),
                 ]
             }
             writeCache[domain] = cache[domain]
