@@ -98,9 +98,11 @@ export default async function main() {
 						if (type == 'misskey') assets = 'mi'
 						if (type == 'misskeylegacy') assets = 'ml'
 						if (type == 'pixelfed') assets = 'pf'
-						if (!json.isDefault)
+						if (!json.isDefault) {
 							favicon = `https://images.weserv.nl/?url=${encodeURI(json.url)}&output=png&w=15`
-						if (json.isDefault) favicon = `https://s.0px.io/a/${assets}.png`
+						} else {
+							favicon = `https://s.0px.io/a/${assets}.png`
+						}
 						let rawFavicon = favicon
 						newObj.withoutCDN = rawFavicon
 						if (!json.isDefault) rawFavicon = json.url
@@ -113,11 +115,9 @@ export default async function main() {
 						if (obj.favicon) newObj.favicon = obj.favicon
 						newObj.isDefault = false
 						if (!obj.favicon) {
+							newObj.favicon = cache[domain]
 							if (~cache[domain].indexOf('https://s.0px.io/a/')) {
 								newObj.isDefault = true
-								newObj.favicon = cache[domain]
-							} else {
-								newObj.favicon = `https://images.weserv.nl/?url=${encodeURI(cache[domain])}&output=png&w=15`
 							}
 						}
 						writeCache[domain] = cache[domain]
