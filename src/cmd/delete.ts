@@ -80,7 +80,7 @@ const fillName = async () => {
                     }
                 } else if (!obj.name && obj.type === 'misskey') {
                     try {
-                        const instanceDataRaw = await axios.get(`https://kids.0px.io/nodeinfo/2.0`, { timeout: 5000 })
+                        const instanceDataRaw = await axios.get(`https://${domain}/nodeinfo/2.0`, { timeout: 5000 })
                         const instanceData = instanceDataRaw.data
                         const name = instanceData.metadata.nodeName
                         if (name.length >= 15) continue
